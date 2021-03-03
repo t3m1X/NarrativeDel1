@@ -40,7 +40,7 @@ namespace RayWenderlich.KQClone.Utilities
 
     public static class CommandParser
     {
-        private static readonly string[] m_verbs = { "get", "look", "pick", "pull", "push"};
+        private static readonly string[] m_verbs = { "get", "look", "pick", "pull", "push", "drop", "place"};
         private static readonly string[] m_prepositions = { "to", "at", "up", "into", "using" };
         private static readonly string[] m_articles = { "a", "an", "the" };
 

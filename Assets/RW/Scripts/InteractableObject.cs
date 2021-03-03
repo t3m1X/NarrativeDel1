@@ -76,7 +76,7 @@ namespace RayWenderlich.KQClone.Core
 
         private string ExecuteActionOnState(Interaction[] stateInteractions, string verb) {
             foreach (Interaction interaction in stateInteractions) {
-                if (Array.IndexOf(interaction.verbs, verb) != 1) {
+                if (Array.IndexOf(interaction.verbs, verb) != -1) {
                     if (interaction.awayDialogue != string.Empty && Vector2.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position) >= m_awayMinDistance) {
                         return interaction.awayDialogue;
                     }
