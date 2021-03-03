@@ -29,12 +29,24 @@
  */
 
 using UnityEngine;
-
 namespace RayWenderlich.KQClone.Core
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class SetSortingOrder : MonoBehaviour
     {
+        [SerializeField] private float m_accuracyFactor = 100;
+        private SpriteRenderer m_sprite;
+        private float m_topPoint;
+
+        private void Awake() {
+            m_sprite = GetComponent<SpriteRenderer>();
+            SetOrder();
+        }
+
+        public void SetOrder() {
+            m_topPoint = Camera.main.transform.position.y + Camera.main.orthographicSize;
+            m_sprite.sortingOrder = (int)(Mathf.Abs(m_topPoint - transform.position.y) * m_accuracyFactor);
+        }
         
     }
 }
