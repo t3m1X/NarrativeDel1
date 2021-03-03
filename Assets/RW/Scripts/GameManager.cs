@@ -36,6 +36,16 @@ namespace RayWenderlich.KQClone.Core
 {
     public class GameManager : MonoBehaviour
     {
+        public void ExecuteCommand(string command) {
+            var parsedCommand = CommandParser.Parse(command);
+            Debug.Log($"Verb: {parsedCommand.verb}");
+            Debug.Log($"Primary: {parsedCommand.primaryEntity}");
+            Debug.Log($"Secondary: {parsedCommand.secondaryEntity}");
+        }
+
+        private void Awake() {
+            ExecuteCommand("push the boulder using the wand");
+        }
 
     }
 }
