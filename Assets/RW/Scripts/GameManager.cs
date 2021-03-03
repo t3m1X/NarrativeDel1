@@ -34,18 +34,55 @@ using RayWenderlich.KQClone.Utilities;
 
 namespace RayWenderlich.KQClone.Core
 {
+    [System.Serializable]
+    public struct InteractableObjectLink {
+        public string[] names;
+        public InteractableObject interactableObject;
+    }
+
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private InteractableObjectLink[] m_objectArray = null;
+        private UIManager m_uiManager;
+        private Dictionary<string, InteractableObject> m_sceneDictionary;
+
         public void ExecuteCommand(string command) {
             var parsedCommand = CommandParser.Parse(command);
-            Debug.Log($"Verb: {parsedCommand.verb}");
-            Debug.Log($"Primary: {parsedCommand.primaryEntity}");
-            Debug.Log($"Secondary: {parsedCommand.secondaryEntity}");
+
+            if (string.IsNullOrEmpty(parsedCommand.verb)) {
+                m_uiManager.ShowPopup("Enter a valid command.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(parsedCommand.primaryEntity)) {
+                m_uiManager.ShowPopup("You need to be more specific.");
+                return;
+            }
+
+            if (m_sceneDictionary.ContainsKey(parsedCommand.primaryEntity)) {
+                var sceneObject = m_sceneDictionary[parsedCommand.primaryEntity];
+                if (sceneObject.IsAvailable)
+                {
+                    if (parsedCommand.verb == "look") m_uiManager.ShowPopup(sceneObject.LookDialogue);
+                    else m_uiManager.ShowPopup(sceneObject.ExecuteAction(parsedCommand.verb));
+                }
+                else {
+                    m_uiManager.ShowPopup("You can't do that - atleast not now.");
+                }
+            }
+            else {
+                m_uiManager.ShowPopup($"I don't understand '{parsedCommand.primaryEntity}'.");
+            }
         }
 
         private void Awake() {
-            ExecuteCommand("push the boulder using the wand");
+            m_uiManager = GameManager.FindObjectOfType<UIManager>();
+            m_sceneDictionary = new Dictionary<string, InteractableObject>();
+            foreach (var item in m_objectArray) {
+                foreach (string name in item.names) {
+                    m_sceneDictionary.Add(name.ToLowerInvariant().Trim(), item.interactableObject);
+                }
+            }
         }
-
     }
 }

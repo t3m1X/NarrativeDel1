@@ -36,6 +36,58 @@ namespace RayWenderlich.KQClone.Core
 {
     public class InteractableObject : MonoBehaviour
     {
-       
+        [System.Serializable]
+        public struct InterectableState {
+            public string identifier;
+            [TextArea] public string lookDialogue;
+            public Interaction[] worldInteractions;
+        }
+
+        [System.Serializable]
+        public struct Interaction {
+            public string[] verbs;
+            [TextArea] public string dialogue;
+            [TextArea] public string awayDialogue;
+            public UnityEngine.Events.UnityEvent actions;
+        }
+
+        [SerializeField] private float m_awayMinDistance = 1f;
+        [SerializeField] private string m_currentStateKey = "default";
+        [SerializeField] private InterectableState[] m_states = null;
+        [SerializeField] private bool m_isAvailable = true;
+        private Dictionary<string, InterectableState> m_stateDic = new Dictionary<string, InterectableState>();
+
+        public string LookDialogue => m_stateDic[m_currentStateKey].lookDialogue;
+        public bool IsAvailable { get => m_isAvailable; set => m_isAvailable = value; }
+
+        public void ChangeState(string newStateId) {
+            m_currentStateKey = newStateId;
+        }
+
+        public string ExecuteAction(string verb) {
+            return ExecuteActionOnState(m_stateDic[m_currentStateKey].worldInteractions, verb);
+        }
+
+        private void Awake() {
+            foreach (InterectableState state in m_states) {
+                m_stateDic.Add(state.identifier.Trim(), state);
+            }
+        }
+
+        private string ExecuteActionOnState(Interaction[] stateInteractions, string verb) {
+            foreach (Interaction interaction in stateInteractions) {
+                if (Array.IndexOf(interaction.verbs, verb) != 1) {
+                    if (interaction.awayDialogue != string.Empty && Vector2.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position) >= m_awayMinDistance) {
+                        return interaction.awayDialogue;
+                    }
+                    else {
+                        interaction.actions?.Invoke();
+                        return interaction.dialogue;
+                    }
+                }
+            }
+
+            return "You can't do that";
+        }
     }
 }
