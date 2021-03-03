@@ -33,9 +33,55 @@ using UnityEngine;
 
 namespace RayWenderlich.KQClone.Core
 {
-    //TODO: Require statement goes here
+    [RequireComponent(typeof(Animator))]
     public class CharacterMovement : MonoBehaviour
     {
 
+        [SerializeField] private float m_speed = 2f;
+        private Animator m_animator;
+        private Vector2 m_currentDirection = Vector2.zero;
+        private IEnumerator m_corroutine;
+
+        private void Awake() {
+            m_animator = GetComponent<Animator>();
+            m_animator.speed = 0;
+        }
+
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.UpArrow)) ToggleMovement(Vector2.up);
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) ToggleMovement(Vector2.left);
+            if (Input.GetKeyDown(KeyCode.DownArrow)) ToggleMovement(Vector2.down);
+            if (Input.GetKeyDown(KeyCode.RightArrow)) ToggleMovement(Vector2.right);
+
+        }
+
+        private void StopMovement() {
+            m_animator.speed = 0;
+            StopAllCoroutines();
+        }
+
+        private void ToggleMovement(Vector2 direction) {
+            StopMovement();
+
+            if (m_currentDirection != direction) {
+                m_animator.speed = 1;
+                m_animator.SetInteger("X", (int)direction.x);
+                m_animator.SetInteger("Y", (int)direction.y);
+                StartCoroutine(MovementRoutine(direction));
+
+                m_currentDirection = direction;
+            }
+            else {
+                m_currentDirection = Vector2.zero;
+            }
+        }
+    
+        private IEnumerator MovementRoutine(Vector2 direction) {
+            while(true) {
+                transform.Translate(direction * m_speed * Time.deltaTime);
+                yield return null;
+            }
+
+        }
     }
 }
