@@ -40,7 +40,7 @@ namespace RayWenderlich.KQClone.Utilities
 
     public static class CommandParser
     {
-        private static readonly string[] m_verbs = { "get", "lock", "pick", "pull", "push"};
+        private static readonly string[] m_verbs = { "get", "look", "pick", "pull", "push"};
         private static readonly string[] m_prepositions = { "to", "at", "up", "into", "using" };
         private static readonly string[] m_articles = { "a", "an", "the" };
 
@@ -73,7 +73,7 @@ namespace RayWenderlich.KQClone.Utilities
 
             return pCmd;
         }
-        
+
         public static bool Contains(this string[] array, string element) {
             return System.Array.IndexOf(array, element) != -1;
         }   

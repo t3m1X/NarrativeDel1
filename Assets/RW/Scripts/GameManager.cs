@@ -67,7 +67,7 @@ namespace RayWenderlich.KQClone.Core
                     else m_uiManager.ShowPopup(sceneObject.ExecuteAction(parsedCommand.verb));
                 }
                 else {
-                    m_uiManager.ShowPopup("You can't do that - atleast not now.");
+                    m_uiManager.ShowPopup("You can't do that - at least not now.");
                 }
             }
             else {
