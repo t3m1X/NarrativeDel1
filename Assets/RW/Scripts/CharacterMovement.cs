@@ -83,5 +83,9 @@ namespace RayWenderlich.KQClone.Core
             }
 
         }
+
+        private void OnCollisionEnter(Collision2D other) {
+            StopMovement();
+        }
     }
 }
